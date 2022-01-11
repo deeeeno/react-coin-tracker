@@ -1,70 +1,40 @@
-# Getting Started with Create React App
+# REACT TUTORIAL 2. Coin Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Nomad coder의 React 두번째 튜토리얼입니다.   
 
-## Available Scripts
+### 주요 내용
+* API Fetch   
+이번엔 useEffect를 사용해서 Component가 처음 로딩될 때 API call하는 법이 주 내용이었다.
+```
+//only one
+  useEffect(()=>{
+    fetch('https://api.coinpaprika.com/v1/tickers').then((res)=>res.json())
+      .then((json)=>{
+        setCoins(json);
+        setSelectCoin(json[0]);
+        setSelectCoinIndex(0);
+        setLoading(false);
+      });
+  },[]);
+```
+fetch함수는 첫 번째 인자로 URL, 두 번째 인자로 option을 받고, Promise 객체를 반환하게 된다. resolve로 Response, reject로 error를 준다.   
+데이터인 Response Object에 대해서 json 메소드는 resolve로 json객체를 반환하기에 위처럼 두개의 then절을 이용하였다.   
+한번 이 부분을 await하도록 수정도 해보았다.
+```
+//only one
+  useEffect(async ()=>{
+    let data = await fetch('https://api.coinpaprika.com/v1/tickers');
+    data = await data.json();
+    //await를 통해 resolve를 그대로 받아버리기.
+    setCoins(data);
+  },[]);
+```
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* Challenge   
+노마드 아저씨는 첼린지 항목으로 코인을 설정하고 USD를 입력받으면 이게 몇 개의 코인을 의미하는지 알려주는 기능을 만들어보라고 하였다. 이 부분에 3개의 state를 만들었는데 다음과 같다.   
+```
+1. selectCoinIndex : 선택한 코인의 인덱스
+2. selectCoin : 선택한 코인 정보
+3. usd : 입력한 USD
+```
+선택한 코인의 인덱스와 정보를 나눈 이유는, 처음엔 코인 정보 자체를 select의 value로 두었지만, [Object Object]로 정보가 되어버려서 인덱스를 받고 그걸 통해 데이터를 가져오도록 했기 떄문이다.
